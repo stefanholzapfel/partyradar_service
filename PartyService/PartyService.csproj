@@ -209,19 +209,19 @@
       <DependentUpon>201412071651286_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AdministrateLocation.cs" />
-    <Compile Include="Models\Config.cs" />
-    <Compile Include="Models\Event.cs" />
-    <Compile Include="Models\EventBindingModels.cs" />
-    <Compile Include="Models\EventKeyword.cs" />
+    <Compile Include="ControllerModels\AccountBindingModels.cs" />
+    <Compile Include="ControllerModels\AccountViewModels.cs" />
+    <Compile Include="DatabaseModels\AdministrateLocation.cs" />
+    <Compile Include="DatabaseModels\Config.cs" />
+    <Compile Include="DatabaseModels\Event.cs" />
+    <Compile Include="ControllerModels\EventBindingModels.cs" />
+    <Compile Include="DatabaseModels\EventKeyword.cs" />
     <Compile Include="Models\GenderType.cs" />
-    <Compile Include="Models\Keyword.cs" />
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\UserOnEvent.cs" />
+    <Compile Include="DatabaseModels\Keyword.cs" />
+    <Compile Include="DatabaseModels\Location.cs" />
+    <Compile Include="DatabaseModels\User.cs" />
+    <Compile Include="DatabaseModels\IdentityModels.cs" />
+    <Compile Include="DatabaseModels\UserOnEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

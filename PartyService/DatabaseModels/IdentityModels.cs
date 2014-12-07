@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 
@@ -25,6 +26,11 @@ namespace PartyService.Models
             return new ApplicationDbContext();
         }
 
+		public async Task<User> GetUserAsync( string userId )
+		{
+			this.Users.SingleOrDefaultAsync( x => x.Id == userId );
+		}
+
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<EventKeyword>()
@@ -45,6 +51,7 @@ namespace PartyService.Models
 				.HasMany( x => x.AdministrateLocations )
 				.WithRequired()
 				.HasForeignKey( x => x.LocationId );
+				
 
 			//modelBuilder.Entity<Event>()
 			//	.Property( x => x.Image ).HasColumnType( "image" );

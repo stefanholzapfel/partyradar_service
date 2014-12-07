@@ -13,6 +13,5 @@ namespace PartyService.Models
 
 		[Required, Display(Name="EventId")]
 		public Guid EventId { get; set; }
-
 	}
 }
