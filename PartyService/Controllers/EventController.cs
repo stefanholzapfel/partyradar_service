@@ -26,7 +26,7 @@ namespace PartyService.Controllers
         // GET: api/Event
         public IQueryable<Event> GetEvents()
         {
-	        db.AdministrateLocations
+	        return db.AdministrateLocations
 		        .Where( x => x.UserId == this.User.Identity.GetUserId() )
 		        .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
 		        .Join( db.Events, l => l.Id, e => e.Location.Id, ( l, e ) => e )
@@ -152,16 +152,11 @@ namespace PartyService.Controllers
 				return BadRequest(ModelState);
 			}
 
-			if (id != aEvent.Id)
-			{
-				return BadRequest();
-			}
-			
-			var aEvent = db.Events.SingleOrDefaultAsync(x=>x.Id == model.EventId)
-			var aUser = db.GetUserAsync( User.Identity.GetUserId() );
+			var aEvent = db.Events.SingleOrDefaultAsync( x => x.Id == model.EventId );
+			var user = await db.GetUserAsync( User.Identity.GetUserId() );
 			
 			var actualOpenEvents = db.UserOnEvents
-				.Where( x => x.User.Id == userId && x.EndTime == null )
+				.Where( x => x.User.Id == user.Id && x.EndTime == null )
 				.ToArray();
 
 			if ( actualOpenEvents.Any( x => x.Event.Id == model.EventId ) )
@@ -175,7 +170,7 @@ namespace PartyService.Controllers
 			if ( @event == null )
 				return BadRequest();
 
-			var userOnEvent = new UserOnEvent { BeginTime = now, Event = @event, Id = Guid.NewGuid(), User = aUser }
+			var userOnEvent = new UserOnEvent { BeginTime = now, Event = @event, Id = Guid.NewGuid(), User = user };
 			db.UserOnEvents.Add( userOnEvent );
 			await db.SaveChangesAsync();
 			return StatusCode(HttpStatusCode.NoContent);

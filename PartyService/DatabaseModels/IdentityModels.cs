@@ -28,7 +28,7 @@ namespace PartyService.Models
 
 		public async Task<User> GetUserAsync( string userId )
 		{
-			this.Users.SingleOrDefaultAsync( x => x.Id == userId );
+			 return await this.Users.SingleOrDefaultAsync( x => x.Id == userId );
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
