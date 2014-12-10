@@ -13,6 +13,7 @@ using System.Web.Http.Description;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PartyService.ControllerModels;
 using PartyService.Models;
 using WebGrease.Css.Extensions;
 
@@ -24,17 +25,18 @@ namespace PartyService.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Event
-        public IQueryable<Event> GetEvents()
+        public IEnumerable<ControllerEvent> GetEvents()
         {
 	        return db.AdministrateLocations
 		        .Where( x => x.UserId == this.User.Identity.GetUserId() )
 		        .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
 		        .Join( db.Events, l => l.Id, e => e.Location.Id, ( l, e ) => e )
-		        .Where( e => !e.IsInactive );
+		        .Where( e => !e.IsInactive )
+				.Select( ControllerEvent.Convert );
         }
 
         // GET: api/Event/5
-        [ResponseType(typeof(Event))]
+        [ResponseType(typeof(ControllerEvent))]
         public async Task<IHttpActionResult> GetEvent(Guid id)
         {
 	        Event @event = await db.Events.SingleOrDefaultAsync( x => x.Id == id );
@@ -43,7 +45,7 @@ namespace PartyService.Controllers
                 return NotFound();
             }
 
-            return Ok(@event);
+			return Ok(ControllerEvent.Convert(@event));
         }
 
         // PUT: api/Event/5
@@ -82,7 +84,7 @@ namespace PartyService.Controllers
         }
 
         // POST: api/Event
-        [ResponseType(typeof(Event))]
+        [ResponseType(typeof(ControllerEvent))]
         public async Task<IHttpActionResult> PostEvent(Event model)
         {
             if (!ModelState.IsValid)
@@ -108,11 +110,11 @@ namespace PartyService.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = model.Id }, model);
+			return CreatedAtRoute("DefaultApi", new { id = model.Id }, ControllerEvent.Convert(model));
         }
 
         // DELETE: api/Event/5
-        [ResponseType(typeof(Event))]
+        [ResponseType(typeof(ControllerEvent))]
         public async Task<IHttpActionResult> DeleteEvent(Guid id)
         {
             Event model = await db.Events.FindAsync(id);
@@ -125,7 +127,7 @@ namespace PartyService.Controllers
             db.Events.AddOrUpdate( model );
             await db.SaveChangesAsync();
 
-            return Ok(model);
+            return Ok(ControllerEvent.Convert( model ));
         }
 
         protected override void Dispose(bool disposing)
