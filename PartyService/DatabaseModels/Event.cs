@@ -25,5 +25,7 @@ namespace PartyService.Models
 
 		[Column(TypeName = "image")]
 		public byte[] Image { get; set; }
+
+        public int TotalParticipants { get; set; }
 	}
 }

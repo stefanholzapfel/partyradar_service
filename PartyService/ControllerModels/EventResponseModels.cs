@@ -16,6 +16,7 @@ namespace PartyService.ControllerModels
 		public Guid? ImageId { get; set; }
 		public String NfcTagId { get; set; }
 		public Guid LocationId { get; set; }
+	    public int TotalParticipants { get; set; }
 
 		public static ControllerEvent Convert( Event @event )
 		{

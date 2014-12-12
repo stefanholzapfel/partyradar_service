@@ -16,7 +16,7 @@ namespace PartyService.Models
 
 		[StringLength(Config.DEFAULT_STRING_LENGTH_I)]
 		public string Name { get; set; }
-		public DbGeometry Position { get; set; }
+		public DbGeography Position { get; set; }
 
 		[StringLength(Config.DEFAULT_STRING_LENGTH_I)]
 		public string Street { get; set; }
