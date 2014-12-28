@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PartyService.ControllerModels;
@@ -20,6 +19,7 @@ using WebGrease.Css.Extensions;
 namespace PartyService.Controllers
 {
 	[Authorize]
+    [RoutePrefix("api/Event")]
     public class EventController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();

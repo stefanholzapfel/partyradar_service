@@ -11,6 +11,8 @@ namespace PartyService
 {
 	public class WebApiApplication : System.Web.HttpApplication
 	{
+        public static PartyService.Providers.ProviderMode ProviderMode { get; private set; }
+
 		protected void Application_Start()
 		{
 			AreaRegistration.RegisterAllAreas();
@@ -18,6 +20,11 @@ namespace PartyService
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
-		}
+            
+            if (System.Configuration.ConfigurationManager.AppSettings["ProviderMode"].ToUpper() == "DBCONTEXT")
+                ProviderMode = Providers.ProviderMode.DbContent;
+            else
+                ProviderMode = Providers.ProviderMode.TestContent;
+		}        
 	}
 }

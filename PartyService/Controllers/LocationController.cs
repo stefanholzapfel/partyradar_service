@@ -17,6 +17,7 @@ using PartyService.Models;
 
 namespace PartyService.Controllers
 {
+    [Authorize]
     public class LocationController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
