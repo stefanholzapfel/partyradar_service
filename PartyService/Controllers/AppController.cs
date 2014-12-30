@@ -1,12 +1,10 @@
-﻿using PartyService.ControllerModels.App;
-using PartyService.Providers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using PartyService.ControllerModels.App;
+using PartyService.Providers;
 
 namespace PartyService.Controllers
 {
@@ -17,44 +15,89 @@ namespace PartyService.Controllers
         [Route("LoginEvent")]
         public async Task<IHttpActionResult> LoginEvent(Guid eventId)
         {
-            return BadRequest(ModelState);
+            if ( eventId == Guid.Empty )
+                return await Task.FromResult( BadRequest(string.Format( "{0} is not a valid id!",Guid.Empty )) );
+
+            var result = await EventProviderFactory
+                .Create( WebApiApplication.ProviderMode )
+                .AttendEventAsync( User.Identity.GetUserId(), eventId );
+
+            if ( result.HasValue )
+                return await Task.FromResult( Ok( result.Value ) );
+            
+            return await Task.FromResult( NotFound() );
         }
 
         [Authorize]
         [Route("LogoutEvent")]
         public async Task<IHttpActionResult> LogoutEvent(Guid eventId)
         {
-            return BadRequest(ModelState);
+            var now = DateTime.Now;
+            var result = await EventProviderFactory
+                .Create( WebApiApplication.ProviderMode )
+                .LeavingEventAsync( User.Identity.GetUserId(), now );
+
+            if(result.HasValue)
+               return await Task.FromResult( Ok( result.Value ) );
+
+            return await Task.FromResult( NotFound() );
         }
 
         [Authorize]
         [Route("GetUserDetails")]
         public async Task<IHttpActionResult> GetUserDetails()
         {
-            return BadRequest(ModelState);
+            var details = await UserProviderFactory
+                .Create( WebApiApplication.ProviderMode )
+                .GetUserDetailAsync( this.User.Identity.GetUserId() );
+
+            return Ok( details );
         }
 
         [Route("GetEvents")]
-        //[ModelName(typeof(ControllerModels.App.Event))]
-        public async Task<IEnumerable<Event>> GetEventsAsync(double longitude, double latitude, double radius)
+        public async Task<IEnumerable<Event>> GetEventsAsync(double longitude, double latitude, DateTime start, DateTime end, double? radius= null)
         {
-            return await EventProviderFactory
+            var result = await EventProviderFactory
                 .Create(WebApiApplication.ProviderMode)
-                .GetEventsAsync(longitude, latitude, radius);
+                .GetEventsAsync(longitude, latitude, radius, start, end );
+
+            result.ForEach(x => x.DetailUrl = Url.Link("ControllerActionApi", new
+                {
+                    controller = "app",
+                    action = "GetEvent",
+                    eventId = x.EventId.ToString()
+                })
+            );
+            return await Task.FromResult<IEnumerable<Event>>(result);            
         }
 
-        [Route("GetEventDetails")]
-        public async Task<EventDetail> GetEventDetails(Guid eventId)
+        [Route("GetEvent")]
+        public async Task<Event> GetEvent(Guid eventId)
         {
-            return await EventProviderFactory
+            var result = await EventProviderFactory
                 .Create(WebApiApplication.ProviderMode)
-                .GetEventDetailsAsync(eventId);
+                .GetEventAsync(eventId);
+            
+            if(result != null)
+                result.DetailUrl = Url.Link("ControllerActionApi", new { controller = "app", action = "GetEvent", eventId = result.EventId.ToString() });
+
+            return await Task.FromResult<Event>(result);
         }
 
         [Route("GetEventPicture")]
         public async Task<IHttpActionResult> GetEventPicture(Guid eventId)
         {
-            return BadRequest(ModelState);
+            if (eventId == Guid.Empty)
+                return BadRequest();
+
+            var pic = await PictureProviderFactory
+                .Create(WebApiApplication.ProviderMode)
+                .GetEventPictureAsync(eventId);
+
+            if (pic == null)
+                return NotFound();
+
+            return Ok(pic);
         }
     }
 }

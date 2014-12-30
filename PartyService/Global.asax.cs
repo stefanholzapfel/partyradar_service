@@ -21,7 +21,7 @@ namespace PartyService
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
             
-            if (System.Configuration.ConfigurationManager.AppSettings["ProviderMode"].ToUpper() == "DBCONTEXT")
+            if (System.Configuration.ConfigurationManager.AppSettings["ProviderMode"].ToUpper() == "DBCONTENT")
                 ProviderMode = Providers.ProviderMode.DbContent;
             else
                 ProviderMode = Providers.ProviderMode.TestContent;

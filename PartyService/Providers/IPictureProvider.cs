@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace PartyService.Providers
 {
-    interface IPictureProvider
+    public interface IPictureProvider
     {
-        EventPicture GetEventPicture(string userId, Guid eventId);
+        Task<EventPicture> GetEventPictureAsync(Guid eventId);
     }
 }

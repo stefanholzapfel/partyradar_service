@@ -10,17 +10,17 @@ namespace PartyService.Providers
 {
     public class MockEventProvider:IEventProvider
     {
-        public async System.Threading.Tasks.Task<VisitResult> AttendEventAsync(string userId, Guid eventId)
+        public async System.Threading.Tasks.Task<DateTime?> AttendEventAsync(string userId, Guid eventId)
         {
-            return await Task.FromResult<VisitResult>(new VisitResult { HttpCode = HttpStatusCode.Created, Timestamp = DateTime.Now });
+            return await Task.FromResult(DateTime.Now);
         }
 
-        public async System.Threading.Tasks.Task<VisitResult> LeavingEventAsync(string userId, Guid eventId)
+        public async Task<DateTime?> LeavingEventAsync( string userId, DateTime leaveTime )
         {
-            return await Task.FromResult<VisitResult>(new VisitResult { HttpCode = HttpStatusCode.Created, Timestamp = DateTime.Now });
+            return await Task.FromResult(DateTime.Now);
         }
 
-        public async System.Threading.Tasks.Task<List<ControllerModels.App.Event>> GetEventsAsync(double longitude, double latitude, double radius)
+        public async Task<List<Event>> GetEventsAsync( double longitude, double latitude, double? radius, DateTime start, DateTime end )
         {
             var result = new List<Event>();
             for(int i=0; i< 10 ; i++)
@@ -37,9 +37,9 @@ namespace PartyService.Providers
             return await Task.FromResult<List<ControllerModels.App.Event>>(result);
         }
 
-        public async System.Threading.Tasks.Task<ControllerModels.App.EventDetail> GetEventDetailsAsync(Guid eventId)
+        public async System.Threading.Tasks.Task<ControllerModels.App.Event> GetEventAsync(Guid eventId)
         {
-            return await Task.FromResult<ControllerModels.App.EventDetail>(new EventDetail
+            return await Task.FromResult<ControllerModels.App.Event>(new Event
             {
                 EventId = eventId,
                 End = null,

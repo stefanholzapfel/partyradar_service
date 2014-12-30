@@ -9,9 +9,9 @@ namespace PartyService.Providers
 {
     public interface IEventProvider
     {
-        Task<VisitResult> AttendEventAsync(string userId, Guid eventId);
-        Task<VisitResult> LeavingEventAsync(string userId, Guid eventId);
-        Task<List<Event>> GetEventsAsync(double longitude, double latitude, double radius);
-        Task<EventDetail> GetEventDetailsAsync(Guid eventId);
+        Task<DateTime?> AttendEventAsync(string userId, Guid eventId);
+        Task<DateTime?> LeavingEventAsync( string userId, DateTime leaveTime );
+        Task<List<Event>> GetEventsAsync( double longitude, double latitude, double? radius, DateTime start, DateTime end );
+        Task<Event> GetEventAsync( Guid eventId );
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 
-namespace PartyService.Models
+namespace PartyService.DatabaseModels
 {
     // You can add profile data for the user by adding more properties to your User class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
 
@@ -51,7 +49,6 @@ namespace PartyService.Models
 				.HasMany( x => x.AdministrateLocations )
 				.WithRequired()
 				.HasForeignKey( x => x.LocationId );
-				
 
 			//modelBuilder.Entity<Event>()
 			//	.Property( x => x.Image ).HasColumnType( "image" );

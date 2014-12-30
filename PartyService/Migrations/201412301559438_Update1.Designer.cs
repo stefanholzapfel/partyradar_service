@@ -6,14 +6,14 @@ namespace PartyService.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class Update01 : IMigrationMetadata
+    [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
+    public sealed partial class Update1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Update01));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Update1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201412122047058_Update01"; }
+            get { return "201412301559438_Update1"; }
         }
         
         string IMigrationMetadata.Source

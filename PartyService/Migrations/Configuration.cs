@@ -1,5 +1,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PartyService.DatabaseModels;
 using PartyService.Models;
 
 namespace PartyService.Migrations
@@ -9,14 +10,14 @@ namespace PartyService.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PartyService.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(PartyService.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
 			//  This method will be called after migrating to the latest version.
 

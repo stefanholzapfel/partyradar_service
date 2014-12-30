@@ -13,6 +13,7 @@ using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PartyService.ControllerModels;
+using PartyService.DatabaseModels;
 using PartyService.Models;
 using WebGrease.Css.Extensions;
 

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using PartyService.ControllerModels;
-using PartyService.Models;
+using PartyService.DatabaseModels;
+using PartyService.Providers;
 
 namespace PartyService.Controllers
 {
@@ -56,7 +55,6 @@ namespace PartyService.Controllers
                 return BadRequest(ModelState);
             }
 
-
             db.Locations.Add( Convert(id, model ) );
 
             try
@@ -81,14 +79,14 @@ namespace PartyService.Controllers
         private Location Convert(Guid id, CreateLocationBindingModel model )
         {
             DbGeography position = null;
-            if (model.Latitude.HasValue && model.Longitude.HasValue)
-                position = DbGeography.PointFromText(string.Format("POINT({0},{1})", model.Longitude, model.Latitude), 4326);
+            if ( model.Latitude.HasValue && model.Longitude.HasValue )
+                position = GeographyHelper.CreatePoint( model.Latitude.Value, model.Longitude.Value );
 
             return new Location
             {
                 Id =id,
                 Name = model.Name,
-                Place = model.Place,
+                City = model.City,
                 PostalCode = model.PostalCode,
                 TotalParticipants = model.TotalParticipants,
                 Street = model.Street,
@@ -108,10 +106,10 @@ namespace PartyService.Controllers
         {
             DbGeography position = null;
             if (model.Latitude.HasValue && model.Longitude.HasValue)
-                position = DbGeography.PointFromText(string.Format("POINT({0},{1})", model.Longitude, model.Latitude), 4326);
+                position = GeographyHelper.CreatePoint(model.Latitude.Value, model.Longitude.Value);
 
             location.Name = model.Name;
-            location.Place = model.Place;
+            location.City = model.City;
             location.PostalCode = model.PostalCode;
             location.Street = model.Street;
             location.TotalParticipants = model.TotalParticipants;

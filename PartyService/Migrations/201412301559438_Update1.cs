@@ -2,18 +2,17 @@ namespace PartyService.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity.Spatial;
     
-    public partial class Update02 : DbMigration
+    public partial class Update1 : DbMigration
     {
         public override void Up()
         {
-            AddColumn("dbo.Locations", "Position", c => c.Geography());
+            AlterColumn("dbo.Events", "TotalParticipants", c => c.Int());
         }
         
         public override void Down()
         {
-            DropColumn("dbo.Locations", "Position");
+            AlterColumn("dbo.Events", "TotalParticipants", c => c.Int(nullable: false));
         }
     }
 }

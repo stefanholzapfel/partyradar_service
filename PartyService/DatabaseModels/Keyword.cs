@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace PartyService.Models
+namespace PartyService.DatabaseModels
 {
 	public class Keyword
 	{

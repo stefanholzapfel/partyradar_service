@@ -22,8 +22,8 @@ namespace PartyService.ControllerModels
         public string PostalCode { get; set; }
 
         [Required]
-        [Display(Name = "Place")]
-        public string Place { get; set; }
+        [Display(Name = "City")]
+        public string City { get; set; }
 
         [Display(Name = "Latitude")]
         public double? Latitude { get; set; }

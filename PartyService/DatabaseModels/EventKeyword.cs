@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PartyService.Models
+namespace PartyService.DatabaseModels
 {
 	public class EventKeyword
 	{
