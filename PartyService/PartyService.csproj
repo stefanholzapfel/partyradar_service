@@ -214,7 +214,6 @@
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OldLocationController.cs" />
     <Compile Include="Controllers\NoContent.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
