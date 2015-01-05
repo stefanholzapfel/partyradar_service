@@ -11,22 +11,8 @@ using PartyService.Providers;
 namespace PartyService.Controllers
 {
     [Authorize] //(Roles = Roles.Admin)] does not work at the moment
-    public class UserController : ApiController
+    public class UserController : ABaseApiController
     {
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-
         // GET: api/User
         public async Task<IHttpActionResult> Get()
         {
