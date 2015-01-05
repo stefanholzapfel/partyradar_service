@@ -16,6 +16,8 @@ namespace PartyService.Providers
 {
     public class DbLocationProvider:ILocationProvider
     {
+        public ApplicationUserManager UserManager { get; set; }
+
         public async Task<ResultSet<LocationDetail>> AddLocationAsync( AddLocation addLocation, string userId )
         {
             var id = Guid.NewGuid();
@@ -88,12 +90,34 @@ namespace PartyService.Providers
             }
         }
 
-        public Task<ResultSet<LocationDetail>> GetAllAsync( string userId )
+        public async Task<ResultSet<LocationDetail[]>> GetAllAsync( string userId )
         {
-            throw new NotImplementedException();
+            using ( var db = new ApplicationDbContext() )
+            {
+                LocationDetail[] locations = null;
+                if ( await UserManager.IsInRoleAsync( userId, Roles.Admin ) )
+                {
+                    locations = (await db.Locations
+                    .Where(l => !l.IsInactive)
+                    .ToArrayAsync())
+                    .Select(Convert)
+                    .ToArray();
+                }
+                else
+                {
+                    locations = (await db.AdministrateLocations
+                    .Where(x => x.UserId == userId)
+                    .Join(db.Locations, x => x.LocationId, x => x.Id, (a, l) => l)
+                    .Where(l => !l.IsInactive)
+                    .ToArrayAsync())
+                    .Select(Convert)
+                    .ToArray();
+                }
+                return new ResultSet<LocationDetail[]>( true ) { Result = locations };
+            }
         }
 
-        public Task<Result> RemoveAsync( Guid locationId )
+        public Task<Result> RemoveAsync( string userId, Guid locationId )
         {
             throw new NotImplementedException();
         }
