@@ -10,6 +10,6 @@ namespace PartyService.Providers
         Task<ResultSet<LocationDetail>> AddLocationAsync( AddLocation addLocation, string userId );
         Task<Result> ChangeLocationAsync( UpdateLocation u );
         Task<ResultSet<LocationDetail[]>> GetAllAsync( string userId );
-        Task<Result> RemoveAsync( string userId, Guid locationId );
+        Task RemoveAsync( string userId, Guid locationId );
     }
 }

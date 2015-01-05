@@ -117,9 +117,26 @@ namespace PartyService.Providers
             }
         }
 
-        public Task<Result> RemoveAsync( string userId, Guid locationId )
+        public async Task RemoveAsync( string userId, Guid locationId )
         {
-            throw new NotImplementedException();
+            using ( var db = new ApplicationDbContext() )
+            {
+                Location location = null;
+                if ( await UserManager.IsInRoleAsync( userId, Roles.Admin ) )
+                {
+                    location = await db.Locations.SingleAsync( x => x.Id == locationId );
+                }
+                else
+                {
+                    location = await db.AdministrateLocations.Where( x => x.UserId == userId )
+                        .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
+                        .SingleAsync( x => x.Id == locationId );
+                }
+                
+                location.IsInactive = true;
+                db.Locations.AddOrUpdate(location);
+                await db.SaveChangesAsync();
+            }
         }
 
         private LocationDetail Convert( Location location )
