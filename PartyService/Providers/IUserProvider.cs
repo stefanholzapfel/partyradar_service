@@ -14,5 +14,6 @@ namespace PartyService.Providers
         Task<List<WebUserDetail>> GetAllWebUserDetailsAsync( );
         Task<ResultSet<WebUserDetail>> AdminAddUserAsync( AddUser model );
         Task<Result> AdminChangeUserAsync( string userId, ChangeUser changeUser );
+        Task<bool> UserExistAsync( string userId );
     }
 }

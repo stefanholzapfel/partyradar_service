@@ -20,7 +20,7 @@ namespace PartyService.Controllers
                 return new NoAuthorized();
 
             var details = await UserProviderFactory
-                .Create(WebApiApplication.ProviderMode, UserManager)
+                .Create( UserManager)
                 .GetAllWebUserDetailsAsync();
 
             return Ok(details);
@@ -33,7 +33,7 @@ namespace PartyService.Controllers
                 return new NoAuthorized();
 
             WebUserDetail detail = await UserProviderFactory
-                .Create(WebApiApplication.ProviderMode,UserManager)
+                .Create(UserManager)
                 .GetWebUserDetailAsync(id);
 
             if ( detail == null )
@@ -53,7 +53,7 @@ namespace PartyService.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await UserProviderFactory.Create( WebApiApplication.ProviderMode, UserManager ).AdminAddUserAsync( model );
+            var result = await UserProviderFactory.Create(UserManager ).AdminAddUserAsync( model );
 
             if ( !result.Succeeded )
                 return BadRequest(result.ErrorMessage);
@@ -75,7 +75,7 @@ namespace PartyService.Controllers
             if ( ( await UserManager.FindByIdAsync( id ) ) == null )
                 NotFound();
 
-            var result = await UserProviderFactory.Create( WebApiApplication.ProviderMode, UserManager ).AdminChangeUserAsync( id, user );
+            var result = await UserProviderFactory.Create( UserManager ).AdminChangeUserAsync( id, user );
             if ( result.Succeeded )
                 return new NoContent();
             else

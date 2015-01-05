@@ -156,6 +156,14 @@ namespace PartyService.Providers
             return new Result( true );
         }
 
+        public async Task<bool> UserExistAsync( string userId )
+        {
+            using ( var db = new ApplicationDbContext() )
+            {
+                return await db.Users.AnyAsync( x => x.Id == userId );
+            }
+        }
+
         private async Task UpdateUserRolesWithClaims( string userId )
         {
             var user = await UserManager.FindByIdAsync( userId );

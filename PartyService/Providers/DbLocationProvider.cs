@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Data.Entity.Spatial;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI.WebControls.WebParts;
 using PartyService.ControllerModels;
 using PartyService.DatabaseModels;
 using PartyService.Models;
@@ -29,7 +24,7 @@ namespace PartyService.Providers
                     AdministrateLocations = new[] { new AdministrateLocation { LocationId = id, UserId = userId } },
                     City = addLocation.City,
                     Name = addLocation.Name,
-                    IsInactive = true,
+                    IsInactive = false,
                     PostalCode = addLocation.ZipCode,
                     Street = addLocation.Address,
                     StreetAddition = addLocation.AddressAdditions,
@@ -41,8 +36,33 @@ namespace PartyService.Providers
                     Website = addLocation.Website
                 } );
                 await db.SaveChangesAsync();
-                var createdLocation = await db.Locations.SingleAsync( x => x.Id == id );
-                return new ResultSet<LocationDetail>( true ) { Result = Convert( createdLocation ) };
+            }
+
+            return await GetLocationAsync( userId, id );
+        }
+
+        public async Task<ResultSet<LocationDetail>> GetLocationAsync( string userId, Guid locationId )
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                Location location;
+                if (await UserManager.IsInRoleAsync(userId, Roles.Admin))
+                {
+                    location = await db.Locations
+                        .SingleOrDefaultAsync( l => !l.IsInactive && l.Id == locationId );
+                }
+                else
+                {
+                    location = await db.AdministrateLocations
+                        .Where( x => x.UserId == userId )
+                        .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
+                        .SingleOrDefaultAsync( l => !l.IsInactive && l.Id == locationId );
+                }
+
+                if ( location == null )
+                    return new ResultSet<LocationDetail>( false, "Location not found!" );
+
+                return new ResultSet<LocationDetail>(true) { Result = Convert( location ) };
             }
         }
 
@@ -157,6 +177,28 @@ namespace PartyService.Providers
             }
         }
 
+        public async Task AddOwnerAsync( Guid locationId, string userId )
+        {
+            using ( var db = new ApplicationDbContext() )
+            {
+                db.AdministrateLocations.Add( new AdministrateLocation { UserId = userId, LocationId = locationId, IsInactive = false } );
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveOwnerAsync( Guid locationId, string userId )
+        {
+            using ( var db = new ApplicationDbContext() )
+            {
+                var owner = await db.AdministrateLocations.SingleOrDefaultAsync( x => x.UserId == userId && x.LocationId == locationId );
+                if ( owner == null )
+                    return;
+
+                db.AdministrateLocations.Remove( owner );
+                await db.SaveChangesAsync();
+            }
+        }
+
         private LocationDetail Convert( Location location )
         {
             return new LocationDetail
@@ -171,7 +213,10 @@ namespace PartyService.Providers
                 AddressAdditions = location.StreetAddition,
                 Country = location.Country,
                 ZipCode = location.PostalCode,
-                Owners = location.AdministrateLocations.Select( x => new LocationOwner { Id = x.UserId, LoginName = x.User.UserName } ).ToList()
+                Owners =
+                    location.AdministrateLocations == null
+                        ? Enumerable.Empty<LocationOwner>().ToList()
+                        : location.AdministrateLocations.Select( x => new LocationOwner { Id = x.UserId, LoginName = x.User.UserName } ).ToList()
             };
         }
     }

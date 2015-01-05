@@ -50,7 +50,7 @@ namespace PartyService.Controllers
         public async Task<IHttpActionResult> GetUserDetails()
         {
             var details = await UserProviderFactory
-                .Create( WebApiApplication.ProviderMode, null )
+                .Create()
                 .GetAppUserDetailAsync( this.User.Identity.GetUserId() );
 
             return Ok( details );

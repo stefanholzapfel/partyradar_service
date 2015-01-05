@@ -14,5 +14,6 @@ namespace PartyService.Providers
         Task<bool> LocationExistAsync( string userId, Guid locationId );
         Task AddOwnerAsync( Guid locationId, string userId );
         Task RemoveOwnerAsync(Guid locationId, string userId);
+        Task<ResultSet<LocationDetail>> GetLocationAsync( string userId, Guid locationId );
     }
 }

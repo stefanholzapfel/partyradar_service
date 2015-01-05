@@ -30,11 +30,11 @@ namespace PartyService.Controllers
 
             if ( await provider.LocationExistAsync( userId, id ) )
             {
-                var result = ( await provider.GetAllAsync( User.Identity.GetUserId() ) );
+                var result = await provider.GetLocationAsync( userId, id );
 
                 if ( result.Succeeded )
                 {
-                    var location = result.Result.Single( x => x.Id == id );
+                    var location = result.Result;
                     return Ok( location );
                 }
                 else
@@ -50,7 +50,7 @@ namespace PartyService.Controllers
             if ( !ModelState.IsValid )
                 return BadRequest( ModelState );
 
-            var result = await LocationProviderFactory.Create().AddLocationAsync( addLocation, User.Identity.GetUserId() );
+            var result = await LocationProviderFactory.Create(UserManager).AddLocationAsync( addLocation, User.Identity.GetUserId() );
 
             if ( result.Succeeded )
                 return Ok( result.Result );
@@ -88,13 +88,6 @@ namespace PartyService.Controllers
 
             await provider.RemoveAsync( userId, id );
             return new NoContent();
-        }
-
-        [Route("AddOwner")]
-        [HttpPost]
-        public async Task<IHttpActionResult> AddOwner( Guid id, [ FromBody ] Guid userId )
-        {
-
         }
     }
 }

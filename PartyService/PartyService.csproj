@@ -208,6 +208,7 @@
     <Compile Include="ControllerModels\EventPicture.cs" />
     <Compile Include="ControllerModels\Keyword.cs" />
     <Compile Include="ControllerModels\LocationBindingModels.cs" />
+    <Compile Include="ControllerModels\LocationOwnerController.cs" />
     <Compile Include="ControllerModels\LocationResponseModels.cs" />
     <Compile Include="ControllerModels\LocationOwner.cs" />
     <Compile Include="Controllers\ABaseApiController.cs" />
