@@ -87,9 +87,9 @@ namespace PartyService.Controllers
                 Id =id,
                 Name = model.Name,
                 City = model.City,
-                PostalCode = model.PostalCode,
-                TotalParticipants = model.TotalParticipants,
-                Street = model.Street,
+                PostalCode = model.ZipCode,
+                TotalParticipants = model.MaxAttends,
+                Street = model.Address,
                 AdministrateLocations = new List<AdministrateLocation>
                 {
                     new AdministrateLocation
@@ -110,9 +110,9 @@ namespace PartyService.Controllers
 
             location.Name = model.Name;
             location.City = model.City;
-            location.PostalCode = model.PostalCode;
-            location.Street = model.Street;
-            location.TotalParticipants = model.TotalParticipants;
+            location.PostalCode = model.ZipCode;
+            location.Street = model.Address;
+            location.TotalParticipants = model.MaxAttends;
         }
 
         // POST: api/Location

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using PartyService.ControllerModels;
 using PartyService.Models;
 
@@ -9,8 +7,9 @@ namespace PartyService.Providers
 {
     public interface ILocationProvider
     {
-        ResultSet<LocationDetail> AddLocation( AddLocation addLocation, string userId );
-        Result ChangeLocation( UpdateLocation updateLocation );
-        ResultSet<LocationDetail> GetAll(string userId );
+        Task<ResultSet<LocationDetail>> AddLocationAsync( AddLocation addLocation, string userId );
+        Task<Result> ChangeLocationAsync( UpdateLocation updateLocation );
+        Task<ResultSet<LocationDetail>> GetAllAsync( string userId );
+        Task<Result> RemoveAsync( Guid locationId );
     }
 }

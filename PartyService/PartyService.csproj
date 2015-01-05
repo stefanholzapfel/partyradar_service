@@ -256,6 +256,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\DbEventProvider.cs" />
+    <Compile Include="Providers\DbLocationProvider.cs" />
     <Compile Include="Providers\DbPictureProvider.cs" />
     <Compile Include="Providers\DbUserProvider.cs" />
     <Compile Include="Providers\EventProviderFactory.cs" />

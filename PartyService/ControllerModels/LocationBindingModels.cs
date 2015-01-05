@@ -15,15 +15,21 @@ namespace PartyService.ControllerModels
 
         [Required]
         [Display(Name = "Address")]
-        public string Street { get; set; }
+        public string Address { get; set; }
+
+        [Display(Name = "AddressAdditions")]
+        public string AddressAdditions { get; set; }
 
         [Required]
         [Display(Name = "ZipCode")]
-        public string PostalCode { get; set; }
+        public string ZipCode { get; set; }
 
         [Required]
         [Display(Name = "City")]
         public string City { get; set; }
+        [Required]
+        [Display(Name = "Country")]
+        public string Country { get; set; }
 
         [Display(Name = "Latitude")]
         public double? Latitude { get; set; }
@@ -31,8 +37,11 @@ namespace PartyService.ControllerModels
         [Display(Name = "Longitude")]
         public double? Longitude { get; set; }
 
-        [Display(Name = "Total Participants")]
-        public int TotalParticipants { get; set; }
+        [Display(Name = "MaxAttends")]
+        public int MaxAttends { get; set; }
+
+        [Display(Name = "Website")]
+        public string Website { get; set; }
     }
 
     public class UpdateLocation : AddLocation
