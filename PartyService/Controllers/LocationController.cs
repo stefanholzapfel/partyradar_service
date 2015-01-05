@@ -89,5 +89,12 @@ namespace PartyService.Controllers
             await provider.RemoveAsync( userId, id );
             return new NoContent();
         }
+
+        [Route("AddOwner")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddOwner( Guid id, [ FromBody ] Guid userId )
+        {
+
+        }
     }
 }

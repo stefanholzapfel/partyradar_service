@@ -4,10 +4,10 @@ namespace PartyService.DatabaseModels
 {
 	public class AdministrateLocation
 	{
-		public Guid LocationId { get; set; }
-		public string UserId { get; set; }
-		public User User { get; set; }
-		public Location Location { get; set; }
-		public bool IsInactive { get; set; }
+        public virtual Guid LocationId { get; set; }
+        public virtual string UserId { get; set; }
+		public virtual User User { get; set; }
+		public virtual Location Location { get; set; }
+        public virtual bool IsInactive { get; set; }
 	}
 }

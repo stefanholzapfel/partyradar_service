@@ -14,7 +14,7 @@ using PartyService.Models;
 
 namespace PartyService.Providers
 {
-    public class DbLocationProvider:ILocationProvider
+    internal class DbLocationProvider:ILocationProvider
     {
         public ApplicationUserManager UserManager { get; set; }
 
