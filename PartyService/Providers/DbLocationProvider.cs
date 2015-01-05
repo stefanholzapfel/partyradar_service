@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls.WebParts;
 using PartyService.ControllerModels;
 using PartyService.DatabaseModels;
 using PartyService.Models;
@@ -42,11 +44,47 @@ namespace PartyService.Providers
             }
         }
 
-        public Task<Result> ChangeLocationAsync( UpdateLocation updateLocation )
+        public async Task<Result> ChangeLocationAsync( UpdateLocation u )
         {
             using ( var db = new ApplicationDbContext() )
             {
+                var location = await db.Locations.SingleOrDefaultAsync( x => x.Id == u.Id );
+
+                if ( location == null )
+                    return new Result( false, "Location not found!" );
+
+                if ( !string.IsNullOrEmpty( u.Address ) )
+                    location.Street = u.Address;
+
+                if ( !string.IsNullOrEmpty( u.AddressAdditions ) )
+                    location.StreetAddition = u.AddressAdditions;
+
+                if ( !string.IsNullOrEmpty( u.City ) )
+                    location.City = u.City;
+
+                if ( !string.IsNullOrEmpty( u.Country ) )
+                    location.Country = u.Country;
                 
+                if ( !string.IsNullOrEmpty( u.Name ) )
+                    location.Name = u.Name;
+
+                if ( !string.IsNullOrEmpty( u.Website ) )
+                    location.Website = u.Website;
+
+                if ( !string.IsNullOrEmpty( u.ZipCode ) )
+                    location.PostalCode = u.ZipCode;
+
+                if ( u.Latitude.HasValue && u.Longitude.HasValue )
+                    location.Position = GeographyHelper.CreatePoint( u.Latitude.Value, u.Longitude.Value );
+                else if ( location.Position != null && ( u.Latitude.HasValue || u.Longitude.HasValue ) )
+                    location.Position = GeographyHelper.CreatePoint( u.Latitude ?? location.Position.Latitude.Value, u.Longitude ?? location.Position.Longitude.Value );
+
+                if ( u.MaxAttends.HasValue )
+                    location.TotalParticipants = u.MaxAttends.Value;
+                
+                db.Locations.AddOrUpdate( location );
+                await db.SaveChangesAsync();
+                return new Result( true );
             }
         }
 

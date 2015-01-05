@@ -8,7 +8,7 @@ namespace PartyService.Providers
     public interface ILocationProvider
     {
         Task<ResultSet<LocationDetail>> AddLocationAsync( AddLocation addLocation, string userId );
-        Task<Result> ChangeLocationAsync( UpdateLocation updateLocation );
+        Task<Result> ChangeLocationAsync( UpdateLocation u );
         Task<ResultSet<LocationDetail>> GetAllAsync( string userId );
         Task<Result> RemoveAsync( Guid locationId );
     }

@@ -17,6 +17,6 @@ namespace PartyService.ControllerModels
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public ICollection<LocationOwner> Owners { get; set; }
-        public int MaxAttends { get; set; }
+        public int? MaxAttends { get; set; }
     }
 }

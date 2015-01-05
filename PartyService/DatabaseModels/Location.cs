@@ -28,7 +28,7 @@ namespace PartyService.DatabaseModels
         [StringLength(Config.DEFAULT_STRING_LENGTH_I)]
 	    public string Country { get; set; }
 
-		public int TotalParticipants { get; set; }
+		public int? TotalParticipants { get; set; }
 
 		public virtual ICollection<AdministrateLocation> AdministrateLocations { get; set; }
 

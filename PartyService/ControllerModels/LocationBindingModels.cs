@@ -38,7 +38,7 @@ namespace PartyService.ControllerModels
         public double? Longitude { get; set; }
 
         [Display(Name = "MaxAttends")]
-        public int MaxAttends { get; set; }
+        public int? MaxAttends { get; set; }
 
         [Display(Name = "Website")]
         public string Website { get; set; }

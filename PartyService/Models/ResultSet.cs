@@ -4,20 +4,20 @@
     {
         public bool Succeeded { get; protected set; }
 
-        public Result( bool succeeded )
+        public string ErrorMessage { get; private set; }
+
+        public Result( bool succeeded, string errorMessage = null )
         {
             Succeeded = succeeded;
+            ErrorMessage = errorMessage;
         }
     }
     public class ResultSet<T>:Result
     {
         public T Result { get; set; }
 
-        public string ErrorMessage { get; protected set; }
-
-        public ResultSet( bool succeeded, string errorMessage= null ) : base( succeeded )
+        public ResultSet( bool succeeded, string errorMessage= null ) : base( succeeded,errorMessage )
         {
-            ErrorMessage = errorMessage;
         }
     }
 }
