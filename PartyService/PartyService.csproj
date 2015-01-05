@@ -265,6 +265,7 @@
     <Compile Include="Providers\ILocationProvider.cs" />
     <Compile Include="Providers\IPictureProvider.cs" />
     <Compile Include="Providers\IUserProvider.cs" />
+    <Compile Include="Providers\LocationProviderFactory.cs" />
     <Compile Include="Providers\MockEventProvider.cs" />
     <Compile Include="Providers\MockPictureProvider.cs" />
     <Compile Include="Providers\PictureProviderFactory.cs" />
