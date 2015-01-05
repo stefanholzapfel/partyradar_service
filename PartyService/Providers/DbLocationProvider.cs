@@ -139,6 +139,24 @@ namespace PartyService.Providers
             }
         }
 
+        public async Task<bool> LocationExistAsync( string userId, Guid locationId )
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                if (await UserManager.IsInRoleAsync(userId, Roles.Admin))
+                {
+                    return await db.Locations.AnyAsync( x => !x.IsInactive && x.Id == locationId );
+                }
+                else
+                {
+                    return await db.AdministrateLocations
+                        .Where( x => x.UserId == userId )
+                        .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
+                        .AnyAsync( l => !l.IsInactive );
+                }
+            }
+        }
+
         private LocationDetail Convert( Location location )
         {
             return new LocationDetail

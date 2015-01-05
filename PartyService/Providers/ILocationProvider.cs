@@ -11,5 +11,6 @@ namespace PartyService.Providers
         Task<Result> ChangeLocationAsync( UpdateLocation u );
         Task<ResultSet<LocationDetail[]>> GetAllAsync( string userId );
         Task RemoveAsync( string userId, Guid locationId );
+        Task<bool> LocationExistAsync( string userId, Guid locationId );
     }
 }
