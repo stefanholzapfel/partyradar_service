@@ -326,7 +326,7 @@ namespace PartyService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new User() { UserName = model.Email, Email = model.Email, BirthDate = model.BirthDate, Gender = model.Gender};
+            var user = new User() { UserName = model.UserName, FirstName = model.FirstName,LastName = model.LastName, Email = model.Email, BirthDate = model.BirthDate, Gender = model.Gender};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using PartyService.ControllerModels.App;
 using PartyService.Providers;
 
@@ -48,8 +50,8 @@ namespace PartyService.Controllers
         public async Task<IHttpActionResult> GetUserDetails()
         {
             var details = await UserProviderFactory
-                .Create( WebApiApplication.ProviderMode )
-                .GetUserDetailAsync( this.User.Identity.GetUserId() );
+                .Create( WebApiApplication.ProviderMode, null )
+                .GetAppUserDetailAsync( this.User.Identity.GetUserId() );
 
             return Ok( details );
         }
@@ -61,13 +63,7 @@ namespace PartyService.Controllers
                 .Create(WebApiApplication.ProviderMode)
                 .GetEventsAsync(longitude, latitude, radius, start, end );
 
-            result.ForEach(x => x.DetailUrl = Url.Link("ControllerActionApi", new
-                {
-                    controller = "app",
-                    action = "GetEvent",
-                    eventId = x.EventId.ToString()
-                })
-            );
+            result.ForEach( x => x.CreateUrls( Url ) );
             return await Task.FromResult<IEnumerable<Event>>(result);            
         }
 
@@ -77,9 +73,9 @@ namespace PartyService.Controllers
             var result = await EventProviderFactory
                 .Create(WebApiApplication.ProviderMode)
                 .GetEventAsync(eventId);
-            
-            if(result != null)
-                result.DetailUrl = Url.Link("ControllerActionApi", new { controller = "app", action = "GetEvent", eventId = result.EventId.ToString() });
+
+            if ( result != null )
+                result.CreateUrls( Url );
 
             return await Task.FromResult<Event>(result);
         }

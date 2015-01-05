@@ -1,4 +1,5 @@
-﻿using PartyService.Areas.HelpPage.ModelDescriptions;
+﻿using System.Web.Http.Routing;
+using PartyService.Areas.HelpPage.ModelDescriptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,22 @@ namespace PartyService.ControllerModels.App
         public int? MaxAttends { get; set; }
         public string Adress { get; set; }
         public string AdressAdditions { get; set; }
+        public string ImageUrl { get; set; }
+
+        public void CreateDetailUrl(UrlHelper urlHelper)
+        {
+            DetailUrl = urlHelper.Link("ControllerActionApi", new { controller = "app", action = "GetEvent", eventId = EventId.ToString() });
+        }
+
+        public void CreateImageUrl(UrlHelper urlHelper)
+        {
+            ImageUrl = urlHelper.Link("ControllerActionApi", new { controller = "app", action = "GetEventPicture", eventId = EventId.ToString() });
+        }
+
+        public void CreateUrls( UrlHelper urlHelper )
+        {
+            CreateDetailUrl( urlHelper );
+            CreateImageUrl( urlHelper );
+        }
     }
 }

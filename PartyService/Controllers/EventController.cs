@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using PartyService.ControllerModels;
 using PartyService.DatabaseModels;
 using PartyService.Models;
@@ -144,39 +141,5 @@ namespace PartyService.Controllers
         {
             return db.Events.Any(e => e.Id == id);
         }
-
-		// PUT: api/Event/Attend
-		[ResponseType(typeof(void))]
-		[Route("Attend")]
-		public async Task<IHttpActionResult> Attend( AttendEventBindingModel model )
-		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
-			var aEvent = db.Events.SingleOrDefaultAsync( x => x.Id == model.EventId );
-			var user = await db.GetUserAsync( User.Identity.GetUserId() );
-			
-			var actualOpenEvents = db.UserOnEvents
-				.Where( x => x.User.Id == user.Id && x.EndTime == null )
-				.ToArray();
-
-			if ( actualOpenEvents.Any( x => x.Event.Id == model.EventId ) )
-				return StatusCode( HttpStatusCode.OK );
-
-			var now = DateTime.Now;
-			actualOpenEvents.ForEach( x=>x.EndTime = now );
-			db.UserOnEvents.AddOrUpdate( actualOpenEvents );
-			
-			var @event = await aEvent;
-			if ( @event == null )
-				return BadRequest();
-
-			var userOnEvent = new UserOnEvent { BeginTime = now, Event = @event, Id = Guid.NewGuid(), User = user };
-			db.UserOnEvents.Add( userOnEvent );
-			await db.SaveChangesAsync();
-			return StatusCode(HttpStatusCode.NoContent);
-		}
     }
 }
