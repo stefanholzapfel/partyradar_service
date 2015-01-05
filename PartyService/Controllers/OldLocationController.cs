@@ -17,22 +17,22 @@ using PartyService.Providers;
 namespace PartyService.Controllers
 {
     [Authorize]
-    public class LocationController : ApiController
+    public class OldLocationController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Location
-        public IEnumerable<ControllerLocation> GetLocations()
+        public IEnumerable<LocationDetail> GetLocations()
         {
             return db.AdministrateLocations
                 .Where( x => x.UserId == this.User.Identity.GetUserId() )
                 .Join( db.Locations, x => x.LocationId, x => x.Id, ( a, l ) => l )
                 .Where( l => ! l.IsInactive )
-                .Select( ControllerLocation.Convert );
+                .Select( LocationDetail.Convert );
         }
 
         // GET: api/Location/5
-        [ResponseType(typeof(ControllerLocation))]
+        [ResponseType(typeof(LocationDetail))]
         public async Task<IHttpActionResult> GetLocation(Guid id)
         {
             var location = await db.AdministrateLocations
@@ -43,12 +43,12 @@ namespace PartyService.Controllers
                 return NotFound();
             }
 
-            return Ok(ControllerLocation.Convert( location.Location ));
+            return Ok(LocationDetail.Convert( location.Location ));
         }
 
         // PUT: api/Location/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutLocation(Guid id, CreateLocationBindingModel model)
+        public async Task<IHttpActionResult> PutLocation(Guid id, AddLocation model)
         {
             if (!ModelState.IsValid)
             {
@@ -76,13 +76,13 @@ namespace PartyService.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private Location Convert(Guid id, CreateLocationBindingModel model )
+        private DatabaseModels.Location Convert(Guid id, AddLocation model )
         {
             DbGeography position = null;
             if ( model.Latitude.HasValue && model.Longitude.HasValue )
                 position = GeographyHelper.CreatePoint( model.Latitude.Value, model.Longitude.Value );
 
-            return new Location
+            return new DatabaseModels.Location
             {
                 Id =id,
                 Name = model.Name,
@@ -102,7 +102,7 @@ namespace PartyService.Controllers
             };
         }
 
-        private void FillLocation(Location location, UpdateLocationBindingModel model )
+        private void FillLocation(DatabaseModels.Location location, UpdateLocation model )
         {
             DbGeography position = null;
             if (model.Latitude.HasValue && model.Longitude.HasValue)
@@ -116,8 +116,8 @@ namespace PartyService.Controllers
         }
 
         // POST: api/Location
-        [ResponseType(typeof(ControllerLocation))]
-        public async Task<IHttpActionResult> PostLocation(UpdateLocationBindingModel model)
+        [ResponseType(typeof(LocationDetail))]
+        public async Task<IHttpActionResult> PostLocation(UpdateLocation model)
         {
             if (!ModelState.IsValid)
             {
@@ -150,10 +150,10 @@ namespace PartyService.Controllers
         }
 
         // DELETE: api/Location/5
-        [ResponseType(typeof(ControllerLocation))]
+        [ResponseType(typeof(LocationDetail))]
         public async Task<IHttpActionResult> DeleteLocation(Guid id)
         {
-            Location location = await db.Locations.FindAsync(id);
+            DatabaseModels.Location location = await db.Locations.FindAsync(id);
             if (location == null)
             {
                 return NotFound();
@@ -163,7 +163,7 @@ namespace PartyService.Controllers
             db.Locations.AddOrUpdate( location);
             await db.SaveChangesAsync();
 
-            return Ok( ControllerLocation.Convert( location ) );
+            return Ok( LocationDetail.Convert( location ) );
         }
 
         protected override void Dispose(bool disposing)

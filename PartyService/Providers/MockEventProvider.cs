@@ -49,7 +49,7 @@ namespace PartyService.Providers
                 AttendeeCount = 300,
                 City = "Wien",
                 Description = "Die Party des Jahrhunderts",
-                LocationName = "Die Location",
+                LocationName = "Die LocationDetails",
                 Website = "http://www.ich-will-spass.at",
                 ZipCode = "1050"
             });            

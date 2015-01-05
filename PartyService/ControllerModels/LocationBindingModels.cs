@@ -7,18 +7,18 @@ using PartyService.Models;
 
 namespace PartyService.ControllerModels
 {
-    public class CreateLocationBindingModel
+    public class AddLocation
     {
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Street")]
+        [Display(Name = "Address")]
         public string Street { get; set; }
 
         [Required]
-        [Display(Name = "PostalCode")]
+        [Display(Name = "ZipCode")]
         public string PostalCode { get; set; }
 
         [Required]
@@ -35,7 +35,7 @@ namespace PartyService.ControllerModels
         public int TotalParticipants { get; set; }
     }
 
-    public class UpdateLocationBindingModel : CreateLocationBindingModel
+    public class UpdateLocation : AddLocation
     {
         [Required]
         [Display(Name = "Id")]

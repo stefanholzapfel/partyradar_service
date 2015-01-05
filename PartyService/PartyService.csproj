@@ -209,12 +209,12 @@
     <Compile Include="ControllerModels\Keyword.cs" />
     <Compile Include="ControllerModels\LocationBindingModels.cs" />
     <Compile Include="ControllerModels\LocationResponseModels.cs" />
-    <Compile Include="ControllerModels\User.cs" />
+    <Compile Include="ControllerModels\LocationOwner.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\OldLocationController.cs" />
     <Compile Include="Controllers\NoContent.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -261,6 +261,7 @@
     <Compile Include="Providers\EventProviderFactory.cs" />
     <Compile Include="Providers\GeographyHelper.cs" />
     <Compile Include="Providers\IEventProvider.cs" />
+    <Compile Include="Providers\ILocationProvider.cs" />
     <Compile Include="Providers\IPictureProvider.cs" />
     <Compile Include="Providers\IUserProvider.cs" />
     <Compile Include="Providers\MockEventProvider.cs" />
