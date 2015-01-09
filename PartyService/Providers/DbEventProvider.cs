@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.Entity.Spatial;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using PartyService.ControllerModels.App;
 using PartyService.DatabaseModels;
-using PartyService.Models;
-using WebGrease.Css.Extensions;
-using Event = PartyService.DatabaseModels.Event;
 
 namespace PartyService.Providers
 {
@@ -53,7 +46,7 @@ namespace PartyService.Providers
             }
         }
 
-        public async Task<List<ControllerModels.App.Event>> GetEventsAsync( double longitude, double latitude, double? radius, DateTime start, DateTime end )
+        public async Task<List<ControllerModels.Event>> GetEventsAsync( double longitude, double latitude, double? radius, DateTime start, DateTime end )
         {
             var curLocation = GeographyHelper.CreatePoint( latitude, longitude );
             double myRadius = radius ?? double.MaxValue;
@@ -71,7 +64,7 @@ namespace PartyService.Providers
             }
         }
 
-        public async Task<ControllerModels.App.Event> GetEventAsync(Guid eventId)
+        public async Task<ControllerModels.Event> GetEventAsync(Guid eventId)
         {
             using ( var db = new ApplicationDbContext() )
             {
@@ -87,9 +80,9 @@ namespace PartyService.Providers
             }
         }
 
-        private ControllerModels.App.Event Convert( DbEvent @event, DbGeography curLocation = null )
+        private ControllerModels.Event Convert( DbEvent @event, DbGeography curLocation = null )
         {
-            return new ControllerModels.App.Event
+            return new ControllerModels.Event
             {
                 EventId = @event.Event.Id,
                 Start = @event.Event.StartTime,

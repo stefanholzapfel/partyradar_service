@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using PartyService.ControllerModels.App;
+using PartyService.ControllerModels;
 using PartyService.Providers;
 
 namespace PartyService.Controllers

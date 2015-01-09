@@ -1,10 +1,7 @@
-﻿using PartyService.ControllerModels.App;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Web;
+using PartyService.ControllerModels;
 
 namespace PartyService.Providers
 {
@@ -34,12 +31,12 @@ namespace PartyService.Providers
                     Title = string.Format("Party {0}", i)
                 });
             }
-            return await Task.FromResult<List<ControllerModels.App.Event>>(result);
+            return await Task.FromResult<List<Event>>(result);
         }
 
-        public async System.Threading.Tasks.Task<ControllerModels.App.Event> GetEventAsync(Guid eventId)
+        public async System.Threading.Tasks.Task<Event> GetEventAsync(Guid eventId)
         {
-            return await Task.FromResult<ControllerModels.App.Event>(new Event
+            return await Task.FromResult<Event>(new Event
             {
                 EventId = eventId,
                 End = null,
