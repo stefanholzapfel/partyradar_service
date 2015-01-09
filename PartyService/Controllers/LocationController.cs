@@ -14,7 +14,7 @@ namespace PartyService.Controllers
         // GET: api/Location
         public async Task<IHttpActionResult> Get()
         {
-            var result = await LocationProviderFactory.Create(UserManager).GetAllAsync( User.Identity.GetUserId() );
+            var result = await LocationProviderFactory.Create(UserManager).GetLocationsAsync( User.Identity.GetUserId() );
             
             if(result.Succeeded)
                 return Ok( result );
@@ -87,7 +87,7 @@ namespace PartyService.Controllers
             if (!locationFound)
                 return NotFound();
 
-            await provider.RemoveAsync( userId, id );
+            await provider.RemoveLocationAsync( userId, id );
             return new NoContent();
         }
     }

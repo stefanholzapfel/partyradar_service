@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace PartyService.Controllers
@@ -17,6 +18,11 @@ namespace PartyService.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        public string UserId
+        {
+            get { return User.Identity.GetUserId(); }
         }
     }
 }
