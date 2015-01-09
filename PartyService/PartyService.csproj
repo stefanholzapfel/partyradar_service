@@ -200,12 +200,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="ControllerModels\AddEvent.cs" />
     <Compile Include="ControllerModels\AddLocation.cs" />
     <Compile Include="ControllerModels\AddUser.cs" />
+    <Compile Include="ControllerModels\ChangeEvent.cs" />
     <Compile Include="ControllerModels\ChangeUser.cs" />
     <Compile Include="ControllerModels\Event.cs" />
     <Compile Include="ControllerModels\App\UserDetail.cs" />
-    <Compile Include="ControllerModels\ControllerEvent.cs" />
     <Compile Include="ControllerModels\EventDetail.cs" />
     <Compile Include="ControllerModels\EventPicture.cs" />
     <Compile Include="ControllerModels\Keyword.cs" />
@@ -269,10 +270,11 @@
     <Compile Include="Providers\DbUserProvider.cs" />
     <Compile Include="Providers\EventProviderFactory.cs" />
     <Compile Include="Providers\GeographyHelper.cs" />
-    <Compile Include="Providers\IEventProvider.cs" />
+    <Compile Include="Providers\IAppEventProvider.cs" />
     <Compile Include="Providers\ILocationProvider.cs" />
     <Compile Include="Providers\IPictureProvider.cs" />
     <Compile Include="Providers\IUserProvider.cs" />
+    <Compile Include="Providers\IWebEventProvider.cs" />
     <Compile Include="Providers\LocationProviderFactory.cs" />
     <Compile Include="Providers\MockPictureProvider.cs" />
     <Compile Include="Providers\PictureProviderFactory.cs" />
