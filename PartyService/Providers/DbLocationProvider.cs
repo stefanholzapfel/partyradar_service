@@ -70,47 +70,54 @@ namespace PartyService.Providers
         {
             using ( var db = new ApplicationDbContext() )
             {
-                var location = await db.Locations.SingleOrDefaultAsync( x => x.Id == u.Id );
+                try
+                {
+                    var location = await db.Locations.SingleOrDefaultAsync(x => x.Id == u.Id);
 
-                if ( location == null )
-                    return new Result( false, "Location not found!" );
+                    if (location == null)
+                        return new Result(false, "Location not found!");
 
-                if ( !string.IsNullOrEmpty( u.Address ) )
-                    location.Street = u.Address;
+                    if (!string.IsNullOrEmpty(u.Address))
+                        location.Street = u.Address;
 
-                if ( !string.IsNullOrEmpty( u.AddressAdditions ) )
-                    location.StreetAddition = u.AddressAdditions;
+                    if (!string.IsNullOrEmpty(u.AddressAdditions))
+                        location.StreetAddition = u.AddressAdditions;
 
-                if ( !string.IsNullOrEmpty( u.City ) )
-                    location.City = u.City;
+                    if (!string.IsNullOrEmpty(u.City))
+                        location.City = u.City;
 
-                if ( !string.IsNullOrEmpty( u.Country ) )
-                    location.Country = u.Country;
-                
-                if ( !string.IsNullOrEmpty( u.Name ) )
-                    location.Name = u.Name;
+                    if (!string.IsNullOrEmpty(u.Country))
+                        location.Country = u.Country;
 
-                if ( !string.IsNullOrEmpty( u.Website ) )
-                    location.Website = u.Website;
+                    if (!string.IsNullOrEmpty(u.Name))
+                        location.Name = u.Name;
 
-                if ( !string.IsNullOrEmpty( u.ZipCode ) )
-                    location.PostalCode = u.ZipCode;
+                    if (!string.IsNullOrEmpty(u.Website))
+                        location.Website = u.Website;
 
-                if ( u.Latitude.HasValue && u.Longitude.HasValue )
-                    location.Position = GeographyHelper.CreatePoint( u.Latitude.Value, u.Longitude.Value );
-                else if ( location.Position != null && ( u.Latitude.HasValue || u.Longitude.HasValue ) )
-                    location.Position = GeographyHelper.CreatePoint( u.Latitude ?? location.Position.Latitude.Value, u.Longitude ?? location.Position.Longitude.Value );
+                    if (!string.IsNullOrEmpty(u.ZipCode))
+                        location.PostalCode = u.ZipCode;
 
-                if ( u.MaxAttends.HasValue )
-                    location.TotalParticipants = u.MaxAttends.Value;
-                
-                db.Locations.AddOrUpdate( location );
-                await db.SaveChangesAsync();
-                return new Result( true );
+                    if (u.Latitude.HasValue && u.Longitude.HasValue)
+                        location.Position = GeographyHelper.CreatePoint(u.Latitude.Value, u.Longitude.Value);
+                    else if (location.Position != null && (u.Latitude.HasValue || u.Longitude.HasValue))
+                        location.Position = GeographyHelper.CreatePoint(u.Latitude ?? location.Position.Latitude.Value, u.Longitude ?? location.Position.Longitude.Value);
+
+                    if (u.MaxAttends.HasValue)
+                        location.TotalParticipants = u.MaxAttends.Value;
+
+                    db.Locations.AddOrUpdate(location);
+                    await db.SaveChangesAsync();
+                    return new Result(true);
+                }
+                catch ( Exception exception )
+                {
+                    return new Result( false, exception.Message );
+                }
             }
         }
 
-        public async Task<ResultSet<LocationDetail[]>> GetAllAsync( string userId )
+        public async Task<ResultSet<LocationDetail[]>> GetLocationsAsync( string userId )
         {
             using ( var db = new ApplicationDbContext() )
             {
@@ -137,7 +144,7 @@ namespace PartyService.Providers
             }
         }
 
-        public async Task RemoveAsync( string userId, Guid locationId )
+        public async Task RemoveLocationAsync( string userId, Guid locationId )
         {
             using ( var db = new ApplicationDbContext() )
             {

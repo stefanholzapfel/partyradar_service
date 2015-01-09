@@ -5,7 +5,7 @@ using PartyService.ControllerModels;
 
 namespace PartyService.Providers
 {
-    public interface IEventProvider
+    public interface IAppEventProvider
     {
         Task<DateTime?> AttendEventAsync(string userId, Guid eventId);
         Task<DateTime?> LeavingEventAsync( string userId, DateTime leaveTime );
