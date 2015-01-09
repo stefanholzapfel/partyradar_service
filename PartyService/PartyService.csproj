@@ -208,13 +208,12 @@
     <Compile Include="ControllerModels\EventPicture.cs" />
     <Compile Include="ControllerModels\Keyword.cs" />
     <Compile Include="ControllerModels\LocationBindingModels.cs" />
-    <Compile Include="ControllerModels\LocationOwnerController.cs" />
+    <Compile Include="Controllers\LocationOwnerController.cs" />
     <Compile Include="ControllerModels\LocationResponseModels.cs" />
     <Compile Include="ControllerModels\LocationOwner.cs" />
     <Compile Include="Controllers\ABaseApiController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppController.cs" />
-    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\NoContent.cs" />

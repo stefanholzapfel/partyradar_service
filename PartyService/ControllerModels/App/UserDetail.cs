@@ -1,4 +1,7 @@
-﻿namespace PartyService.ControllerModels.App
+﻿using System;
+using PartyService.Models;
+
+namespace PartyService.ControllerModels.App
 {
     public class UserDetail
     {
@@ -12,6 +15,8 @@
     public class WebUserDetail : UserDetail
     {
         public bool IsAdmin { get; set; }
+        public GenderType Gender { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public static WebUserDetail ParseTo( UserDetail userDetail )
         {
@@ -22,7 +27,8 @@
                 Id = userDetail.Id,
                 IsAdmin = false,
                 LastName = userDetail.LastName,
-                UserName = userDetail.UserName
+                UserName = userDetail.UserName,
+                Gender = GenderType.Unknown
             };
         }
     }

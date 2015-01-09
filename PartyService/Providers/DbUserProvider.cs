@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
@@ -48,7 +49,9 @@ namespace PartyService.Providers
                     LastName = user.LastName,
                     Id = userId,
                     UserName = user.UserName,
-                    IsAdmin = await UserManager.IsInRoleAsync( userId,Roles.Admin )
+                    IsAdmin = await UserManager.IsInRoleAsync( userId,Roles.Admin ),
+                    Gender = user.Gender,
+                    BirthDate = user.BirthDate
                 };
             }
         }
@@ -65,7 +68,9 @@ namespace PartyService.Providers
                         LastName = user.LastName,
                         Id = user.Id,
                         UserName = user.UserName,
-                        IsAdmin = UserManager.IsInRole( user.Id,Roles.Admin )
+                        IsAdmin = UserManager.IsInRole( user.Id,Roles.Admin ),
+                        Gender = user.Gender,
+                        BirthDate = user.BirthDate
                     }
                 ).ToList();
                 return users;
@@ -87,7 +92,7 @@ namespace PartyService.Providers
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
             if ( !result.Succeeded )
-                return new ResultSet<WebUserDetail>( false );
+                return new ResultSet<WebUserDetail>( false, String.Join( ". ", result.Errors ) );
 
 
             var createdUser = await UserManager.FindByNameAsync(model.UserName);

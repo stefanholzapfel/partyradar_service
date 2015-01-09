@@ -68,6 +68,7 @@ namespace PartyService.Controllers
             if (! locationFound )
                 return NotFound();
 
+            updateLocation.Id = id;
             var result = await provider.ChangeLocationAsync( updateLocation );
 
             if ( result.Succeeded )
