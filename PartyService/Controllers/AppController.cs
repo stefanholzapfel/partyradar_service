@@ -19,7 +19,7 @@ namespace PartyService.Controllers
                 return await Task.FromResult( BadRequest(string.Format( "{0} is not a valid id!",Guid.Empty )) );
 
             var result = await EventProviderFactory
-                .Create( WebApiApplication.ProviderMode )
+                .Create()
                 .AttendEventAsync( User.Identity.GetUserId(), eventId );
 
             if ( result.HasValue )
@@ -34,7 +34,7 @@ namespace PartyService.Controllers
         {
             var now = DateTime.Now;
             var result = await EventProviderFactory
-                .Create( WebApiApplication.ProviderMode )
+                .Create()
                 .LeavingEventAsync( User.Identity.GetUserId(), now );
 
             if(result.HasValue)
@@ -58,7 +58,7 @@ namespace PartyService.Controllers
         public async Task<IEnumerable<Event>> GetEventsAsync(double longitude, double latitude, DateTime start, DateTime end, double? radius= null)
         {
             var result = await EventProviderFactory
-                .Create(WebApiApplication.ProviderMode)
+                .Create()
                 .GetEventsAsync(longitude, latitude, radius, start, end );
 
             result.ForEach( x => x.CreateUrls( Url ) );
@@ -69,7 +69,7 @@ namespace PartyService.Controllers
         public async Task<Event> GetEvent(Guid eventId)
         {
             var result = await EventProviderFactory
-                .Create(WebApiApplication.ProviderMode)
+                .Create()
                 .GetEventAsync(eventId);
 
             if ( result != null )
