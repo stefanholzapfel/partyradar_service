@@ -1,11 +1,9 @@
-﻿using System.Web.Http.Routing;
-using PartyService.Areas.HelpPage.ModelDescriptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Web.Http.Routing;
+using PartyService.Areas.HelpPage.ModelDescriptions;
 
-namespace PartyService.ControllerModels.App
+namespace PartyService.ControllerModels
 {
     [ModelName("AppEvent")]
     public class Event
