@@ -275,6 +275,7 @@
     <Compile Include="Providers\IPictureProvider.cs" />
     <Compile Include="Providers\IUserProvider.cs" />
     <Compile Include="Providers\IWebEventProvider.cs" />
+    <Compile Include="Providers\KeywordProvider.cs" />
     <Compile Include="Providers\LocationProviderFactory.cs" />
     <Compile Include="Providers\MockPictureProvider.cs" />
     <Compile Include="Providers\PictureProviderFactory.cs" />
@@ -353,6 +354,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ControllerModels\Web\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

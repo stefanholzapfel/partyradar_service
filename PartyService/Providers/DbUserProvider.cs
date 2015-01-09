@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -119,46 +120,55 @@ namespace PartyService.Providers
 
         public async Task<Result> AdminChangeUserAsync( string userId, ChangeUser changeUser )
         {
-            using ( var db = new ApplicationDbContext() )
+            try
             {
-                var user = await db.Users.FirstOrDefaultAsync( x => x.Id == userId );
-                
-                if ( user == null )
-                    return new ResultSet<WebUserDetail>( false, "Could not find user with id: " + userId );
+               
+                var user = await UserManager.Users.SingleOrDefaultAsync( x => x.Id == userId );
 
-                if ( changeUser.BirthDate.HasValue )
+                if (user == null)
+                    return new ResultSet<WebUserDetail>(false, "Could not find user with id: " + userId);
+
+                if (changeUser.BirthDate.HasValue)
                     user.BirthDate = changeUser.BirthDate.Value;
 
-                if ( changeUser.Gender.HasValue )
+                if (changeUser.Gender.HasValue)
                     user.Gender = changeUser.Gender.Value;
 
-                if ( !string.IsNullOrEmpty( changeUser.Email ) )
+                if (!string.IsNullOrEmpty(changeUser.Email))
                     user.Email = changeUser.Email;
 
-                if ( !string.IsNullOrEmpty( changeUser.FirstName ) )
+                if (!string.IsNullOrEmpty(changeUser.FirstName))
                     user.FirstName = changeUser.FirstName;
 
-                if ( !string.IsNullOrEmpty( changeUser.LastName ) )
+                if (!string.IsNullOrEmpty(changeUser.LastName))
                     user.LastName = changeUser.LastName;
 
-                db.Users.Attach( user );
-                await db.SaveChangesAsync();
-
-                if ( changeUser.IsAdmin.HasValue )
+                var result = await UserManager.UpdateAsync( user );
+                if ( !result.Succeeded )
+                    return new Result( false, String.Join( ". ", result.Errors ) );
+                
+                if (changeUser.IsAdmin.HasValue)
                 {
                     var isInAdminRole = await UserManager.IsInRoleAsync(userId, Roles.Admin);
-                    if ( isInAdminRole != changeUser.IsAdmin )
+                    if (isInAdminRole != changeUser.IsAdmin)
                     {
-                        if ( changeUser.IsAdmin.Value )
-                            await UserManager.AddToRoleAsync(userId, Roles.Admin);
+                        IdentityResult roleResult;
+                        if (changeUser.IsAdmin.Value)
+                            roleResult = await UserManager.AddToRoleAsync(userId, Roles.Admin);
                         else
-                            await UserManager.RemoveFromRoleAsync(userId, Roles.Admin);
+                            roleResult = await UserManager.RemoveFromRoleAsync(userId, Roles.Admin);
+
+                        if ( !roleResult.Succeeded )
+                            return new Result( false, String.Join( ". ", roleResult.Errors ) );
                     }
-                    await UpdateUserRolesWithClaims( userId );
+                    await UpdateUserRolesWithClaims(userId);
                 }
-                    
+                return new Result(true);
             }
-            return new Result( true );
+            catch ( Exception exception )
+            {
+                return new Result( false, exception.Message );
+            }
         }
 
         public async Task<bool> UserExistAsync( string userId )
@@ -166,6 +176,21 @@ namespace PartyService.Providers
             using ( var db = new ApplicationDbContext() )
             {
                 return await db.Users.AnyAsync( x => x.Id == userId );
+            }
+        }
+
+        public async Task<Result> RemoveUserAsync( string userId )
+        {
+            try
+            {
+                var user = await UserManager.Users.SingleAsync( x => x.Id == userId );
+                var result = UserManager.Delete(user);
+
+                return new Result( result.Succeeded, String.Join( ". ", result.Errors ) );
+            }
+            catch (Exception exception)
+            {
+                return new Result(false, exception.Message);
             }
         }
 

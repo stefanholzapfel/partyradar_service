@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
@@ -78,18 +79,22 @@ namespace PartyService.Controllers
             var result = await UserProviderFactory.Create( UserManager ).AdminChangeUserAsync( id, user );
             if ( result.Succeeded )
                 return new NoContent();
-            else
-                return BadRequest();
+            
+            return BadRequest();
         }
 
         // DELETE: api/User/5
         [HttpDelete]
-        public async Task<IHttpActionResult> Delete(int id)
+        public async Task<IHttpActionResult> Delete(string id)
         {
             if (!await IsAdmin())
                 return new NoAuthorized();
 
-            return NotFound();
+            var result = await UserProviderFactory.Create( UserManager ).RemoveUserAsync( id );
+            if ( result.Succeeded )
+                return new NoContent();
+
+            return BadRequest( result.ErrorMessage );
         }
 
         private async Task<bool> IsAdmin( )

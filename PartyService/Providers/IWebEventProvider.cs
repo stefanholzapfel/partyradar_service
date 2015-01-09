@@ -13,5 +13,7 @@ namespace PartyService.Providers
         Task<ResultSet<List<EventDetail>>> GetEventsByLocationAsync( Guid locationId );
         Task<Result> RemoveEventAsync( Guid eventId );
         Task<bool> EventExistAsync( Guid eventId );
+        Task<ResultSet<EventDetail>> AddEventAsync( AddEvent addEvent );
+        Task<Result> ChangeEventAsync( ChangeEvent changeEvent );
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace PartyService.ControllerModels
 {
-    public class ChangeEvent
+    public class ControllerChangeEvent
     {
         public string Title { get; set; }
         public DateTime? Start { get; set; }
@@ -11,5 +11,11 @@ namespace PartyService.ControllerModels
         public string Description { get; set; }
         public string Website { get; set; }
         public int? MaxAttends { get; set; }
+        public byte[] Image { get; set; }
+        public Guid[] KeywordIds { get; set; }
+    }
+    public class ChangeEvent: ControllerChangeEvent
+    {
+        public Guid EventId { get; set; }
     }
 }

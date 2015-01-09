@@ -88,7 +88,7 @@ namespace PartyService.Providers
 
         protected ControllerModels.Event Convert( DbEvent @event, DbGeography curLocation = null )
         {
-            return new ControllerModels.Event
+            var result = new ControllerModels.Event
             {
                 EventId = @event.Event.Id,
                 Start = @event.Event.StartTime,
@@ -101,11 +101,9 @@ namespace PartyService.Providers
                     @event.Event.EventKeywords == null
                         ? Enumerable.Empty<ControllerModels.Keyword>().ToList()
                         : @event.Event.EventKeywords.Select( k => new ControllerModels.Keyword { Id = k.KeywordId, Label = k.Keyword.Label } ).ToList(),
-                Latitude = @event.Event.Location.Position.Latitude ?? 0.0,
-                Longitude = @event.Event.Location.Position.Longitude ?? 0.0,
+               
                 Title = @event.Event.Name,
                 AttendeeCount = @event.Count,
-                Distance = curLocation == null ? null : @event.Event.Location.Position.Distance( curLocation ),
                 Adress = @event.Event.Location.Street,
                 AdressAdditions = @event.Event.Location.StreetAddition,
                 Country = @event.Event.Location.Country,
@@ -113,6 +111,14 @@ namespace PartyService.Providers
                 MaxAttends = @event.Event.TotalParticipants?? @event.Event.Location.TotalParticipants,
                 Website = @event.Event.Website ?? @event.Event.Location.Website
             };
+
+            if ( @event.Event.Location.Position != null )
+            {
+                result.Latitude = @event.Event.Location.Position.Latitude ?? 0.0;
+                result.Longitude = @event.Event.Location.Position.Longitude ?? 0.0;
+                result.Distance = curLocation == null ? null : @event.Event.Location.Position.Distance( curLocation );
+            }
+            return result;
         }
 
         protected IQueryable<DatabaseModels.Event> GetActiveEvents( ApplicationDbContext db )
@@ -220,9 +226,11 @@ namespace PartyService.Providers
                     var @event = await eventQuery.Where(x => x.Id == eventId).SingleOrDefaultAsync();
                     if (@event == null)
                         return new Result(false, "No event found for given ID!");
-
+                    
+                    @event.IsInactive = true;
                     db.Events.AddOrUpdate(@event);
                     await db.SaveChangesAsync();
+                    
                     return new Result(true);
                 }
                 catch (Exception exception)
@@ -240,6 +248,96 @@ namespace PartyService.Providers
                 return await eventQuery.AnyAsync( x => x.Id == eventId );
             }
         }
+
+        public async Task<ResultSet<EventDetail>> AddEventAsync( AddEvent addEvent )
+        {
+            var id = Guid.NewGuid();
+            try
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    db.Events.Add(new Event
+                    {
+                        Id = id,
+                        Description = addEvent.Description,
+                        EndTime = addEvent.End,
+                        Image = addEvent.Image,
+                        Location = db.Locations.Single(x => x.Id == addEvent.LocationId),
+                        IsInactive = false,
+                        Name = addEvent.Title,
+                        Website = addEvent.Website,
+                        StartTime = addEvent.Start,
+                        TotalParticipants = addEvent.MaxAttends,
+                        EventKeywords =
+                            KeywordProvider.GetKeywords(db)
+                                .Where(x => addEvent.KeywordIds.Contains(x.Id))
+                                .Select(x => new EventKeyword { EventId = id, KeywordId = x.Id })
+                                .ToList()
+
+                    });
+                    await db.SaveChangesAsync();
+                }
+                return await GetEventAsync( id );
+            }
+            catch (Exception exception)
+            {
+                return new ResultSet<EventDetail>(false, exception.Message);
+            }
+        }
+
+        public async Task<Result> ChangeEventAsync( ChangeEvent changeEvent )
+        {
+            try
+            {
+                using ( var db = new ApplicationDbContext() )
+                {
+                    var @event = await ( await GetEventsDependingOnOwner( db ) ).SingleOrDefaultAsync( x => x.Id == changeEvent.EventId );
+
+                    if ( changeEvent.Description != null )
+                        @event.Description = changeEvent.Description == String.Empty ? null : changeEvent.Description;
+
+                    if ( changeEvent.Image != null )
+                        @event.Image = changeEvent.Image.Count() == 0 ? null : changeEvent.Image;
+
+                    if ( changeEvent.End.HasValue )
+                        @event.EndTime = changeEvent.End;
+
+                    if ( changeEvent.Start.HasValue )
+                        @event.StartTime = changeEvent.Start;
+
+                    if ( changeEvent.LocationId != null )
+                        @event.Location = await db.Locations.SingleAsync( x => x.Id == changeEvent.LocationId );
+
+                    if ( changeEvent.MaxAttends.HasValue )
+                        @event.TotalParticipants = changeEvent.MaxAttends;
+
+                    if ( changeEvent.Title != null )
+                        @event.Name = changeEvent.Title == String.Empty ? null : changeEvent.Title;
+
+                    if ( changeEvent.Website != null )
+                        @event.Website = changeEvent.Website == String.Empty ? null : changeEvent.Website;
+
+                    if ( changeEvent.KeywordIds != null )
+                    {
+                        @event.EventKeywords = KeywordProvider.GetKeywords( db )
+                            .Where( x => changeEvent.KeywordIds.Contains( x.Id ) )
+                            .Select( x => new EventKeyword { EventId = @event.Id, KeywordId = x.Id } )
+                            .ToList();
+                    }
+
+                    db.Events.AddOrUpdate( @event );
+                    db.SaveChanges();
+                }
+
+                return new Result( true );
+
+            }
+            catch ( Exception exception)
+            {
+                return new Result( false, exception.Message );
+            }
+        }
+
         protected EventDetail ConvertDetail(DbEvent @event, DbGeography curLocation = null)
         {
             var detailEvent = EventDetail.Create(Convert(@event, curLocation));
@@ -261,5 +359,6 @@ namespace PartyService.Providers
             
             return eventQuery;
         }
+
     }
 }
