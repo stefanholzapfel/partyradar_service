@@ -3,21 +3,35 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using PartyService.ControllerModels;
 using PartyService.DatabaseModels;
+using PartyService.Models;
 
 namespace PartyService.Providers
 {
     public class DbPictureProvider:IPictureProvider
     {
-        public async Task<ControllerModels.EventPicture> GetEventPictureAsync(Guid eventId)
+        public async Task<ResultSet<EventPicture>> GetEventPictureAsync( Guid eventId )
         {
-            using ( var db = new ApplicationDbContext() )
+            try
             {
-                var @event = await db.Events.SingleOrDefaultAsync( x => x.Id == eventId );
-                return new EventPicture
+                using (var db = new ApplicationDbContext())
                 {
-                    EventId = eventId,
-                    Image = @event.Image
-                };
+                    var @event = await db.Events.SingleOrDefaultAsync(x => x.Id == eventId);
+                    if (@event == null)
+                        return new ResultSet<EventPicture>(false, "Image not found for given Id!");
+
+                    return new ResultSet<EventPicture>(true)
+                    {
+                        Result = new EventPicture
+                        {
+                            EventId = eventId,
+                            Image = @event.Image
+                        }
+                    };
+                }
+            }
+            catch ( Exception exc )
+            {
+                return new ResultSet<EventPicture>( false, exc.Message );
             }
         }
     }

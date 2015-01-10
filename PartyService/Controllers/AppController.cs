@@ -84,6 +84,9 @@ namespace PartyService.Controllers
             if (eventId == Guid.Empty)
                 return BadRequest();
 
+            if ( !await EventProviderFactory.Create().EventExistAsync( eventId ) )
+                return NotFound();
+
             var pic = await PictureProviderFactory
                 .Create(WebApiApplication.ProviderMode)
                 .GetEventPictureAsync(eventId);

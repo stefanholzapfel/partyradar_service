@@ -1,14 +1,12 @@
-﻿using PartyService.ControllerModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using PartyService.ControllerModels;
+using PartyService.Models;
 
 namespace PartyService.Providers
 {
     public interface IPictureProvider
     {
-        Task<EventPicture> GetEventPictureAsync(Guid eventId);
+        Task<ResultSet<EventPicture>> GetEventPictureAsync( Guid eventId );
     }
 }

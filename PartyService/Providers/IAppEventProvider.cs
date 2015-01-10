@@ -11,5 +11,6 @@ namespace PartyService.Providers
         Task<DateTime?> LeavingEventAsync( string userId, DateTime leaveTime );
         Task<List<Event>> GetEventsAsync( double longitude, double latitude, double? radius, DateTime start, DateTime end );
         Task<Event> GetEventAsync( Guid eventId );
+        Task<bool> EventExistAsync( Guid eventId );
     }
 }

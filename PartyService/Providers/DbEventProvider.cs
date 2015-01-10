@@ -109,7 +109,8 @@ namespace PartyService.Providers
                 Country = @event.Event.Location.Country,
                 Description = @event.Event.Description,
                 MaxAttends = @event.Event.TotalParticipants?? @event.Event.Location.TotalParticipants,
-                Website = @event.Event.Website ?? @event.Event.Location.Website
+                Website = @event.Event.Website ?? @event.Event.Location.Website,
+                HasImage = @event.Event.Image != null && @event.Event.Image.Any()
             };
 
             if ( @event.Event.Location.Position != null )
@@ -125,7 +126,7 @@ namespace PartyService.Providers
         {
             return db.Events.Where( x => !x.IsInactive );
         }
-        private async Task<bool> EventExistAsync(Guid eventId)
+        public async Task<bool> EventExistAsync(Guid eventId)
         {
             using ( var db = new ApplicationDbContext() )
             {
@@ -256,25 +257,30 @@ namespace PartyService.Providers
             {
                 using (var db = new ApplicationDbContext())
                 {
-                    db.Events.Add(new Event
+                    var nEvent = new Event
                     {
                         Id = id,
                         Description = addEvent.Description,
                         EndTime = addEvent.End,
-                        Image = addEvent.Image,
-                        Location = db.Locations.Single(x => x.Id == addEvent.LocationId),
+                        Image = addEvent.Image != null ? System.Convert.FromBase64String(addEvent.Image): null,
+                        Location = db.Locations.Single( x => x.Id == addEvent.LocationId ),
                         IsInactive = false,
                         Name = addEvent.Title,
                         Website = addEvent.Website,
                         StartTime = addEvent.Start,
-                        TotalParticipants = addEvent.MaxAttends,
-                        EventKeywords =
-                            KeywordProvider.GetKeywords(db)
-                                .Where(x => addEvent.KeywordIds.Contains(x.Id))
-                                .Select(x => new EventKeyword { EventId = id, KeywordId = x.Id })
-                                .ToList()
+                        TotalParticipants = addEvent.MaxAttends
+                    };
+                    
+                    if ( addEvent.LocationId != Guid.Empty )
+                        nEvent.Location = db.Locations.Single( x => x.Id == addEvent.LocationId );
+                    
+                    if (addEvent.KeywordIds != null && addEvent.KeywordIds.Any() )
+                        nEvent.EventKeywords = KeywordProvider.GetKeywords( db )
+                            .Where( x => addEvent.KeywordIds.Contains( x.Id ) )
+                            .Select( x => new EventKeyword { EventId = id, KeywordId = x.Id } )
+                            .ToList();
 
-                    });
+                    db.Events.Add(nEvent);
                     await db.SaveChangesAsync();
                 }
                 return await GetEventAsync( id );

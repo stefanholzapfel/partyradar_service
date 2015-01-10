@@ -16,7 +16,10 @@ namespace PartyService.Controllers
                 .GetEventsAsync();
 
             if ( result.Succeeded )
+            {
+                result.Result.ForEach( x=>x.CreateUrls( Url ) );
                 return Ok( result.Result );
+            }
 
             return BadRequest( result.ErrorMessage );
         }
@@ -30,7 +33,10 @@ namespace PartyService.Controllers
 
             var result = await provider.GetEventAsync( id );
             if ( result.Succeeded )
+            {
+                result.Result.CreateUrls( Url );
                 return Ok( result.Result );
+            }
 
             return BadRequest( result.ErrorMessage );
         }
@@ -40,7 +46,7 @@ namespace PartyService.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
+            
             if (!await LocationProviderFactory.Create( UserManager ).LocationExistAsync( UserId, model.LocationId))
                 return NotFound();
 

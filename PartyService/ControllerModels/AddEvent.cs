@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PartyService.Areas.HelpPage.ModelDescriptions;
 
@@ -18,6 +17,6 @@ namespace PartyService.ControllerModels
         public string Description { get; set; }
         public string Website { get; set; }
         public int? MaxAttends { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
     }
 }
