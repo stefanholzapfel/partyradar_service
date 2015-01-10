@@ -4,7 +4,7 @@
     {
         public bool Succeeded { get; protected set; }
 
-        public string ErrorMessage { get; private set; }
+        public string ErrorMessage { get; set; }
 
         public Result( bool succeeded, string errorMessage = null )
         {

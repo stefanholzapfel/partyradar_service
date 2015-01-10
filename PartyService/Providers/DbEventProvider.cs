@@ -186,7 +186,7 @@ namespace PartyService.Providers
                 }
                 catch ( Exception exception)
                 {
-                    return new ResultSet<EventDetail>( false, exception.Message );
+                    return new ResultSet<EventDetail>( false, exception.JoinMessages() );
                 }
             }
         }
@@ -212,7 +212,7 @@ namespace PartyService.Providers
                 }
                 catch ( Exception exc )
                 {
-                    return new ResultSet<List<EventDetail>>( false, exc.Message );
+                    return new ResultSet<List<EventDetail>>( false, exc.JoinMessages() );
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace PartyService.Providers
                 }
                 catch (Exception exception)
                 {
-                    return new Result(false, exception.Message);
+                    return new Result(false, exception.JoinMessages());
                 }
             }
         }
@@ -287,7 +287,7 @@ namespace PartyService.Providers
             }
             catch (Exception exception)
             {
-                return new ResultSet<EventDetail>(false, exception.Message);
+                return new ResultSet<EventDetail>(false, exception.JoinMessages());
             }
         }
 
@@ -325,6 +325,8 @@ namespace PartyService.Providers
 
                     if ( changeEvent.KeywordIds != null )
                     {
+                        @event.EventKeywords.RemoveAll( x=> 1==1 );
+
                         @event.EventKeywords = KeywordProvider.GetKeywords( db )
                             .Where( x => changeEvent.KeywordIds.Contains( x.Id ) )
                             .Select( x => new EventKeyword { EventId = @event.Id, KeywordId = x.Id } )
@@ -340,7 +342,7 @@ namespace PartyService.Providers
             }
             catch ( Exception exception)
             {
-                return new Result( false, exception.Message );
+                return new Result( false, exception.JoinMessages() );
             }
         }
 

@@ -59,7 +59,7 @@ namespace PartyService.Controllers
         }
 
         // PUT: api/Event/5
-        public async Task<IHttpActionResult> Put(Guid id, [FromBody]ControllerChangeEvent changeEvent)
+        public async Task<IHttpActionResult> Put(Guid id, ControllerChangeEvent changeEvent)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
