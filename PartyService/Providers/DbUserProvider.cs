@@ -1,40 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using System.Web.Hosting;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using PartyService.ControllerModels;
 using PartyService.ControllerModels.App;
 using PartyService.DatabaseModels;
 using PartyService.Models;
-using WebGrease.Css.Extensions;
-using User = PartyService.DatabaseModels.User;
 
 namespace PartyService.Providers
 {
     public class DbUserProvider:IUserProvider
     {
         public ApplicationUserManager UserManager { get; set; }
-        public async Task<UserDetail> GetAppUserDetailAsync( string userId )
+        public async Task<AppUserDetail> GetAppUserDetailAsync( string userId )
         {
             using ( var db = new ApplicationDbContext() )
             {
                 var user = await db.GetUserAsync( userId );
-                return new UserDetail
+                var details = new AppUserDetail
                 {
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Id = userId,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    AttendEventId = null
                 };
+
+                var onParty = db.UserOnEvents.SingleOrDefault( x => x.UserId == userId && !x.EndTime.HasValue );
+                if ( onParty != null )
+                    details.AttendEventId = onParty.EventId;
+
+                return details;
             }
         }
 

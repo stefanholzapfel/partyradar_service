@@ -3,13 +3,18 @@ using PartyService.Models;
 
 namespace PartyService.ControllerModels.App
 {
-    public class UserDetail
+    public abstract class UserDetail
     {
         public string Id { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+    }
+
+    public class AppUserDetail:UserDetail
+    {
+        public Guid? AttendEventId { get; set; }
     }
 
     public class WebUserDetail : UserDetail
