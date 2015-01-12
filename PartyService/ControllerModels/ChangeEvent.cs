@@ -11,7 +11,7 @@ namespace PartyService.ControllerModels
         public string Description { get; set; }
         public string Website { get; set; }
         public int? MaxAttends { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public Guid[] KeywordIds { get; set; }
     }
     public class ChangeEvent: ControllerChangeEvent

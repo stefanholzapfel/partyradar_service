@@ -303,7 +303,7 @@ namespace PartyService.Providers
                         @event.Description = changeEvent.Description == String.Empty ? null : changeEvent.Description;
 
                     if ( changeEvent.Image != null )
-                        @event.Image = changeEvent.Image.Count() == 0 ? null : changeEvent.Image;
+                        @event.Image = System.Convert.FromBase64String( changeEvent.Image );
 
                     if ( changeEvent.End.HasValue )
                         @event.EndTime = changeEvent.End;

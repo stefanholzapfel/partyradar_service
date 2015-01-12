@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using PartyService.ControllerModels;
@@ -44,17 +45,27 @@ namespace PartyService.Controllers
         // POST: api/Event
         public async Task<IHttpActionResult> Post([FromBody]AddEvent model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            
-            if (!await LocationProviderFactory.Create( UserManager ).LocationExistAsync( UserId, model.LocationId))
+            if ( !ModelState.IsValid )
+            {
+                Log.Error("Create Event: modelstate is not valid!");
+                return BadRequest( ModelState );
+            }
+
+            if ( !await LocationProviderFactory.Create( UserManager ).LocationExistAsync( UserId, model.LocationId ) )
+            {
+                Log.Warn( "Location not found" );
                 return NotFound();
+            }
 
             var result = await EventProviderFactory.CreateWebEventProvider( UserId, UserManager ).AddEventAsync( model );
 
             if ( result.Succeeded )
+            {
+                Log.Info( "Create event succeeded!" );
                 return Ok( result.Result );
+            }
 
+            Log.ErrorFormat("EventProvider-error: {0}", result.ErrorMessage  );
             return BadRequest( result.ErrorMessage );
         }
 
@@ -62,20 +73,33 @@ namespace PartyService.Controllers
         public async Task<IHttpActionResult> Put(Guid id, ControllerChangeEvent changeEvent)
         {
             if (!ModelState.IsValid)
+            {
+                Log.Error("Create Event: modelstate is not valid!");
                 return BadRequest(ModelState);
+            }
 
-            if (changeEvent.LocationId.HasValue && !await LocationProviderFactory.Create(UserManager).LocationExistAsync(UserId, changeEvent.LocationId.Value))
+            if ( changeEvent.LocationId.HasValue && !await LocationProviderFactory.Create( UserManager ).LocationExistAsync( UserId, changeEvent.LocationId.Value ) )
+            {
+                Log.WarnFormat("Change-event: location not found for id: {0}", changeEvent.LocationId);
                 return NotFound();
+            }
 
             var provider = EventProviderFactory.CreateWebEventProvider( UserId, UserManager );
-            if (!await provider.EventExistAsync(id))
+            if ( !await provider.EventExistAsync( id ) )
+            {
+                Log.WarnFormat( "Change-event: event not found for id: {0}", id );
                 return NotFound();
+            }
 
             var result = await provider.ChangeEventAsync( Convert( changeEvent, id ) );
 
             if ( result.Succeeded )
+            {
+                Log.Info( "Change event: succeeded!" );
                 return new NoContent();
+            }
 
+            Log.ErrorFormat("EventProvider-error: {0}", result.ErrorMessage);
             return BadRequest( result.ErrorMessage );
         }
 
