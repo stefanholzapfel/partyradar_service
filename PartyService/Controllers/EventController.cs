@@ -51,6 +51,8 @@ namespace PartyService.Controllers
                 return BadRequest( ModelState );
             }
 
+            Log.DebugFormat( "Image: {0}",model.Image );
+
             if ( !await LocationProviderFactory.Create( UserManager ).LocationExistAsync( UserId, model.LocationId ) )
             {
                 Log.Warn( "Location not found" );

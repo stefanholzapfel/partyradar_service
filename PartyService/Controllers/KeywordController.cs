@@ -7,7 +7,6 @@ using PartyService.Providers;
 
 namespace PartyService.Controllers
 {
-    [Authorize]
     public class KeywordController : ApiController
     {
         // GET: api/Keyword
